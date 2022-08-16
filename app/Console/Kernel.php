@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Log;
 
 class Kernel extends ConsoleKernel
 {
@@ -16,6 +17,14 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+        $schedule->command( 'queue:work --tries=3' )->cron( '* * * * *' )->withoutOverlapping( 5 )->before(function () {
+            Log::info('Processing video encryption');
+         })->onSuccess(function () {
+            Log::info('Video encryption processed');
+         })
+         ->onFailure(function () {
+            Log::error('Video encryption failed');
+         });
     }
 
     /**

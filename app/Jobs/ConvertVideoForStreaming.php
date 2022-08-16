@@ -10,7 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use ProtoneMedia\LaravelFFMpeg\Exporters\HLSExporter;
 use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 
@@ -37,7 +37,7 @@ class ConvertVideoForStreaming implements ShouldQueue
     public function handle()
     {
         $this->video->update([
-            'convert_start_for_streaming_at' => Carbon::now(),
+            'convert_start_for_streaming_at' => now(),
         ]);
         // create some video formats...
         // $lowBitrateFormat  = (new X264)->setKiloBitrate(500);
@@ -72,7 +72,12 @@ class ConvertVideoForStreaming implements ShouldQueue
 
         // update the database so we know the convertion is done!
         $this->video->update([
-            'converted_for_streaming_at' => Carbon::now(),
+            'converted_for_streaming_at' => now(),
         ]);
+    }
+
+    public function failed(\Throwable $exception)
+    {
+        Log::error( $exception );
     }
 }
