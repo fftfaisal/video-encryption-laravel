@@ -24,7 +24,10 @@
                                         Filename
                                     </th>
                                     <th scope="col" class="py-3 px-6">
-                                        Encrypted
+                                        Processing At
+                                    </th>
+                                    <th scope="col" class="py-3 px-6">
+                                        Completed At
                                     </th>
                                     <th scope="col" class="py-3 px-6">
                                         Action
@@ -45,14 +48,17 @@
                                             {{ $video->original_name }}
                                         </td>
                                         <td class="py-4 px-6">
-                                            {{ $video->converted_for_streaming_at?->format('d M Y') }}
+                                            {{ $video->convert_start_for_streaming_at?->format('d M Y, h:i A') }}
+                                        </td>
+                                        <td class="py-4 px-6">
+                                            {{ $video->converted_for_streaming_at?->format('d M Y, h:i A') }}
                                         </td>
                                         <td class="py-4 px-6">
                                             <a href="{{ route('videos.show',$video) }}"
                                                 class="font-medium text-blue-600 dark:text-blue-500 hover:underline">View<a>
                                         </td>
                                     </tr>
-                                    
+
                                 @empty
                                     <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700 text-center text-red-800 font-bold">
                                         <td class="py-4 px-6" colspan="99">

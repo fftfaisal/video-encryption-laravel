@@ -12,8 +12,8 @@ class Video extends Model
     use HasFactory;
     protected $guarded = [];
     protected $casts = [
-        'converted_for_downloading_at' => 'datetime',
-        'converted_for_streaming_at' => 'datetime',
+        'convert_start_for_streaming_at'    => 'datetime',
+        'converted_for_streaming_at'        => 'datetime',
     ];
 
     public function url() : Attribute

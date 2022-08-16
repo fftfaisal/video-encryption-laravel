@@ -52,10 +52,10 @@ class VideoController extends Controller {
                 $fileId = explode( '_', $file )[0];
             }
             $videoFile = Video::where('uuid',$fileId)->firstOrFail();
-            $filePath = $file;
+            $filePath = $videoFile->id .'/'.$file;
         } else {
             $videoFile = Video::findOrFail($file);
-            $filePath = $videoFile->uuid.'.m3u8';
+            $filePath = $videoFile->id .'/'.$videoFile->uuid.'.m3u8';
         }
         // dd($filePath);
         // return $fileId;

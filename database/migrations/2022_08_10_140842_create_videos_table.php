@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string( 'disk' );
             $table->string( 'path' );
             $table->datetime( 'converted_for_streaming_at' )->nullable();
+            $table->datetime( 'convert_start_for_streaming_at' )->nullable();
             $table->timestamps();
         });
     }

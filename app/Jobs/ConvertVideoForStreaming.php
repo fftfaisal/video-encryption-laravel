@@ -36,12 +36,15 @@ class ConvertVideoForStreaming implements ShouldQueue
      */
     public function handle()
     {
+        $this->video->update([
+            'convert_start_for_streaming_at' => Carbon::now(),
+        ]);
         // create some video formats...
         // $lowBitrateFormat  = (new X264)->setKiloBitrate(500);
         // $midBitrateFormat  = (new X264)->setKiloBitrate(1500);
         $highBitrateFormat = (new X264)->setKiloBitrate(4000);
         $encryptionKey = HLSExporter::generateEncryptionKey();
-        \Storage::put( 'encrypted/' .$this->video->uuid.'.key', $encryptionKey );
+        \Storage::put( 'encrypted/'.$this->video->id.'/' .$this->video->uuid.'.key', $encryptionKey );
         // open the uploaded video from the right disk...
         FFMpeg::fromDisk($this->video->disk)
             ->open($this->video->path)
@@ -56,6 +59,7 @@ class ConvertVideoForStreaming implements ShouldQueue
             // ->addFormat($lowBitrateFormat)
             // ->addFormat($midBitrateFormat)
             ->setSegmentLength(10)
+            ->setKeyFrameInterval(100)
             ->addFormat($highBitrateFormat)
             // ->onProgress(function ($percentage) {
             //     return response()->jsonp('progressing',[
@@ -64,7 +68,7 @@ class ConvertVideoForStreaming implements ShouldQueue
             //     ]);
             // })
         // call the 'save' method with a filename...
-            ->save($this->video->uuid . '.m3u8');
+            ->save($this->video->id .'/' . $this->video->uuid .'.m3u8');
 
         // update the database so we know the convertion is done!
         $this->video->update([
