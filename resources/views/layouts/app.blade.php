@@ -8,7 +8,7 @@
         <title>{{ config('app.name', 'Laravel') }}</title>
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap">
+        <link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Lato:wght@400;600;700&display=swap">
         <link href="https://vjs.zencdn.net/7.20.1/video-js.css" rel="stylesheet" />
         <link href="https://unpkg.com/@videojs/themes@1/dist/{{ request()->get('theme','fantasy') }}/index.css" rel="stylesheet">
         <!-- Scripts -->

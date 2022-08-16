@@ -18,7 +18,7 @@ class VideoController extends Controller {
         $request->validate( [
             'title'       => 'required',
             'description' => 'required',
-            'video'       => ['required',File::types( ['mp4', 'webm','mov'] )->max( 2048 * 1024 )],
+            'video'       => ['required',File::types( ['mp4', 'webm','mov','mkv'] )->max( 2048 * 1024 )],
         ] );
         $videoFile           = $request->file( 'video' );
         $name            = time() . '.' . $videoFile->getClientOriginalExtension();

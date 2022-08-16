@@ -32,7 +32,7 @@
                         <div class="mb-6">
                             <label class="block">
                                 <span class="sr-only">Upload file</span>
-                                <input type="file" accept="video/mp4,video/x-m4v,video/webm,video/mov" name="video"
+                                <input type="file" accept="video/mp4,video/x-matroska,video/webm,video/quicktime" name="video"
                                     class="block w-full text-sm text-gray-900 file:mr-4 file:py-4 file:px-4 file:border-0 rounded-lg focus:ring-blue-500 focus:border-blue-500 border border-gray-300 cursor-pointer file:text-sm file:font-semibold file:bg-gray-900 file:text-white hover:file:bg-gray-500 bg-gray-50" />
                             </label>
                         </div>
@@ -68,7 +68,7 @@
                     $('#loader').removeClass('hidden');
                     $(this).find('.submit-text').text('Processing...');
                     // $(this).closest('form').submit();
-                    console.log($(this).closest('form').serialize());
+                    // console.log($(this).closest('form').serialize());
                     let formData = new FormData($('#video-form')[0]);
                     $.ajax({
                         url: "{{ route('videos.store') }}",

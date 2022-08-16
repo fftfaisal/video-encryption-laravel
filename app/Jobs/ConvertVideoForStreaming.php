@@ -37,9 +37,9 @@ class ConvertVideoForStreaming implements ShouldQueue
     public function handle()
     {
         // create some video formats...
-        $lowBitrateFormat  = (new X264)->setKiloBitrate(500);
-        $midBitrateFormat  = (new X264)->setKiloBitrate(1500);
-        $highBitrateFormat = (new X264)->setKiloBitrate(3000);
+        // $lowBitrateFormat  = (new X264)->setKiloBitrate(500);
+        // $midBitrateFormat  = (new X264)->setKiloBitrate(1500);
+        $highBitrateFormat = (new X264)->setKiloBitrate(4000);
         $encryptionKey = HLSExporter::generateEncryptionKey();
         \Storage::put( 'encrypted/' .$this->video->uuid.'.key', $encryptionKey );
         // open the uploaded video from the right disk...
@@ -53,15 +53,16 @@ class ConvertVideoForStreaming implements ShouldQueue
 
         // we'll add different formats so the stream will play smoothly
         // with all kinds of internet connections...
-            ->addFormat($lowBitrateFormat)
-            ->addFormat($midBitrateFormat)
+            // ->addFormat($lowBitrateFormat)
+            // ->addFormat($midBitrateFormat)
+            ->setSegmentLength(10)
             ->addFormat($highBitrateFormat)
-            ->onProgress(function ($percentage) {
-                return response()->jsonp('progressing',[
-                    'percentage' => $percentage,
-                    'message' => 'Converting video for streaming...',
-                ]);
-            })
+            // ->onProgress(function ($percentage) {
+            //     return response()->jsonp('progressing',[
+            //         'percentage' => $percentage,
+            //         'message' => 'Converting video for streaming...',
+            //     ]);
+            // })
         // call the 'save' method with a filename...
             ->save($this->video->uuid . '.m3u8');
 
