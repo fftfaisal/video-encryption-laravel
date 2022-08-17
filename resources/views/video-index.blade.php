@@ -48,10 +48,10 @@
                                             {{ $video->original_name }}
                                         </td>
                                         <td class="py-4 px-6">
-                                            {{ $video->convert_start_for_streaming_at?->format('d M Y, h:i A') }}
+                                            {{ $video->convert_start_for_streaming_at?->format('d M Y, h:i:s A') }}
                                         </td>
                                         <td class="py-4 px-6">
-                                            {{ $video->converted_for_streaming_at?->format('d M Y, h:i A') }}
+                                            {{ $video->converted_for_streaming_at?->format('d M Y, h:i:s A') }}
                                         </td>
                                         <td class="py-4 px-6">
                                             <a href="{{ route('videos.show',$video) }}"

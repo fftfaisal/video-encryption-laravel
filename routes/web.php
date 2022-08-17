@@ -22,12 +22,12 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
-Route::get('/videos', [VideoController::class,'index'])->name('videos.index');
+Route::get('/videos', [VideoController::class,'index'])->middleware(['auth'])->name('videos.index');
 
-Route::post('/videos/store', [VideoController::class,'store'])->name('videos.store');
+Route::post('/videos/store', [VideoController::class,'store'])->middleware(['auth'])->name('videos.store');
 
-Route::get('/videos/{video}', [VideoController::class,'view'])->name('videos.show');
+Route::get('/videos/{video}', [VideoController::class,'view'])->middleware(['auth'])->name('videos.show');
 
-Route::get('/files/{file}', [VideoController::class,'getFile'])->name('getFile');
+Route::get('/files/{file}', [VideoController::class,'getFile'])->middleware(['auth'])->name('getFile');
 
 require __DIR__.'/auth.php';

@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Video;
+use FFMpeg\Format\Video\WebM;
 use FFMpeg\Format\Video\X264;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -27,6 +28,7 @@ class ConvertVideoForStreaming implements ShouldQueue
     public function __construct(Video $video)
     {
         $this->video = $video;
+        // Log::channel('faisal')->info("starting job for video ID: {$video->id} at ". now() );
     }
 
     /**
@@ -36,6 +38,8 @@ class ConvertVideoForStreaming implements ShouldQueue
      */
     public function handle()
     {
+        Log::channel('faisal')->info( "processing job for video ID: {$this->video->id} at " . now() );
+
         $this->video->update([
             'convert_start_for_streaming_at' => now(),
         ]);
@@ -48,7 +52,14 @@ class ConvertVideoForStreaming implements ShouldQueue
         // open the uploaded video from the right disk...
         FFMpeg::fromDisk($this->video->disk)
             ->open($this->video->path)
-
+            // ->export()
+            // ->inFormat($highBitrateFormat)
+            // ->onProgress(function ($percentage) {
+            //     echo("{$percentage}% done <br>");
+            // })
+            // ->toDisk($this->video->disk)
+            // ->save($this->video->id .'/' . $this->video->uuid .'.webm');
+            // ->open($this->video->id .'/' . $this->video->uuid .'.webm');
         // call the 'exportForHLS' method and specify the disk to which we want to export...
             ->exportForHLS()
             ->withEncryptionKey($encryptionKey,$this->video->uuid.'.key')
@@ -58,15 +69,12 @@ class ConvertVideoForStreaming implements ShouldQueue
         // with all kinds of internet connections...
             // ->addFormat($lowBitrateFormat)
             // ->addFormat($midBitrateFormat)
-            ->setSegmentLength(10)
-            ->setKeyFrameInterval(100)
+            // ->setSegmentLength(10)
+            // ->setKeyFrameInterval(100)
             ->addFormat($highBitrateFormat)
-            // ->onProgress(function ($percentage) {
-            //     return response()->jsonp('progressing',[
-            //         'percentage' => $percentage,
-            //         'message' => 'Converting video for streaming...',
-            //     ]);
-            // })
+            ->onProgress(function ($percentage) {
+                Log::channel('faisal')->info( 'progress: ' . $percentage . '%' );
+            })
         // call the 'save' method with a filename...
             ->save($this->video->id .'/' . $this->video->uuid .'.m3u8');
 
@@ -74,10 +82,11 @@ class ConvertVideoForStreaming implements ShouldQueue
         $this->video->update([
             'converted_for_streaming_at' => now(),
         ]);
+        Log::channel('faisal')->info( "ended job for video ID: {$this->video->id} at ". now()  );
     }
 
     public function failed(\Throwable $exception)
     {
-        Log::error( $exception );
+        Log::channel('faisal')->error( $exception );
     }
 }
