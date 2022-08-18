@@ -21,6 +21,10 @@ class ConvertVideoForStreaming implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $video;
+
+    public $timeout = 120;
+
+    public $tries = 3;
     /**
      * Create a new job instance.
      *
