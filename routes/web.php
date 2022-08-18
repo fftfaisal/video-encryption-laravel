@@ -27,6 +27,7 @@ Route::get('/videos', [VideoController::class,'index'])->middleware(['auth'])->n
 Route::post('/videos/store', [VideoController::class,'store'])->middleware(['auth'])->name('videos.store');
 
 Route::get('/videos/{video}', [VideoController::class,'view'])->middleware(['auth'])->name('videos.show');
+Route::get('/videos/{video}/process', [VideoController::class,'processVideo'])->middleware(['auth'])->name('videos.process');
 
 Route::get('/files/{file}', [VideoController::class,'getFile'])->middleware(['auth'])->name('getFile');
 

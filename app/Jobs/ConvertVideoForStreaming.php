@@ -10,6 +10,7 @@ use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\Middleware\WithoutOverlapping;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use ProtoneMedia\LaravelFFMpeg\Exporters\HLSExporter;
@@ -31,6 +32,10 @@ class ConvertVideoForStreaming implements ShouldQueue
         // Log::channel('faisal')->info("starting job for video ID: {$video->id} at ". now() );
     }
 
+    public function middleware()
+    {
+        return [new WithoutOverlapping($this->video->id)];
+    }
     /**
      * Execute the job.
      *
@@ -73,7 +78,11 @@ class ConvertVideoForStreaming implements ShouldQueue
             // ->setKeyFrameInterval(100)
             ->addFormat($highBitrateFormat)
             ->onProgress(function ($percentage) {
-                Log::channel('faisal')->info( 'progress: ' . $percentage . '%' );
+                Log::channel('faisal')->info( 'progressed: ' . $percentage . '%' );
+                // echo "progress: {$percentage}% done <br>";
+                $this->video->update( [
+                    'processing_percentage' => $percentage,
+                ] );
             })
         // call the 'save' method with a filename...
             ->save($this->video->id .'/' . $this->video->uuid .'.m3u8');

@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Jobs\ConvertVideoForStreaming;
 use App\Models\Video;
+use Artisan;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\File;
+use Symfony\Component\Console\Output\BufferedOutput;
 
 class VideoController extends Controller {
     public function index()
@@ -37,6 +39,9 @@ class VideoController extends Controller {
     }
 
     public function view(Video $video) {
+        if (request()->ajax()) {
+            return response()->json(['video' => $video]);
+        }
         return view('video-player', compact('video'));
     }
 
@@ -62,5 +67,9 @@ class VideoController extends Controller {
         // $videoFile = Video::where('uuid',$fileId[0] )->orWhere('id',$file)->firstOrFail();
         // $filePath = isset($fileId[1]) ? $file : $videoFile->uuid.'.m3u8';
         return response()->file( storage_path('app/encrypted/'.$filePath) );
+    }
+    public function processVideo(Video $video)
+    {
+        return view('video-process', compact('video'));
     }
 }
