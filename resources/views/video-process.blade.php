@@ -29,7 +29,7 @@
                     .then(function(response) {
                         // console.log(response.video.processing_percentage);
                         $('#percentage').css('width', response.video.processing_percentage + '%');
-                        $('.percentage').html(response.video.processing_percentage);
+                        $('#percentage').html(response.video.processing_percentage + '%');
                         if (response.video.processing_percentage == 100) {
                             clearInterval(interval);
                         }
