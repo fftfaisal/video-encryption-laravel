@@ -26,6 +26,8 @@ class ConvertVideoForStreaming implements ShouldQueue
      *
      * @return void
      */
+    public $tries = 3;
+    public $timeout = 3600;
     public function __construct(Video $video)
     {
         $this->video = $video;
