@@ -76,6 +76,31 @@
                         data: formData,
                         processData: false,
                         contentType: false,
+                        xhr: function() {
+                            var xhr = new window.XMLHttpRequest();
+
+                            xhr.upload.addEventListener("progress", function(evt) {
+                            if (evt.lengthComputable) {
+                                var percentComplete = evt.loaded / evt.total;
+                                percentComplete = parseInt(percentComplete * 100);
+                                console.log(percentComplete);
+                                $('.submit-text').text('Uploading ' + percentComplete + '%');
+
+                                if (percentComplete === 100) {
+
+                                }
+
+                            }
+                            }, false);
+
+                            return xhr;
+                        },
+                        uploadProgress: function(event, position, total, percentComplete) {
+                            var percentVal = percentComplete + '%';
+                            // bar.width(percentVal);
+                            // percent.html(percentVal);
+                            $('.submit-text').text('Uploading ' + percentVal);
+                        },
                         success: function (data) {
                             if(data?.percentage > 0) {
                                 $('.success-text').text('Uploading ' + data.percentage + '%');
