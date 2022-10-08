@@ -41,6 +41,11 @@ return [
             'root' => storage_path('app/encrypted'),
             'throw' => false,
         ],
+        'secrets' => [
+            'driver' => 'local',
+            'root' => storage_path('app/secrets'),
+            'throw' => false,
+        ],
 
         'public' => [
             'driver' => 'local',

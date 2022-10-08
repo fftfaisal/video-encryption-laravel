@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ConvertVideoForDownloading;
 use App\Jobs\ConvertVideoForStreaming;
 use App\Models\Video;
 use Illuminate\Http\Request;
@@ -11,6 +12,9 @@ class VideoController extends Controller {
     public function index()
     {
         $videos = Video::all();
+        // $video = Video::find(1);
+        // $this->dispatch( new ConvertVideoForDownloading( $video ) );
+
         return view('video-index', compact('videos'));
     }
     function store( Request $request ) {
@@ -32,7 +36,9 @@ class VideoController extends Controller {
             'title'         => $request->title,
             'description'   => $request->description,
         ]);
-        $this->dispatch( new ConvertVideoForStreaming( $video ) );
+        // $this->dispatch( new ConvertVideoForStreaming( $video ) );
+        $this->dispatch( new ConvertVideoForDownloading( $video ) );
+
         return response()->json( ['success' => 'Video Uploaded successfully', 'video_id' => $video->id] );
     }
 
@@ -69,5 +75,32 @@ class VideoController extends Controller {
     public function processVideo(Video $video)
     {
         return view('video-process', compact('video'));
+    }
+
+    public function getPlaylist( $video, $playlist = null ) {
+        $video = Video::find($video);
+        if (empty($playlist)) {
+            $playlist = "{$video->id}/{$video->uuid}.m3u8";
+        } else {
+            $playlist = "{$video->id}/$playlist";
+        }
+        // dd($playlist);
+        return \FFMpeg::dynamicHLSPlaylist()
+        ->fromDisk( 'encrypted' )
+        ->open( $playlist )
+        ->setKeyUrlResolver( function ( $key ) use($video)  {
+            return route( 'video.key', ['key' => urlencode($video->id. '-'.$key)] );
+        } )
+        ->setMediaUrlResolver( function ( $mediaFilename ) use($video)  {
+            // return \Storage::disk( 'encrypted' )->url( $video->id. '/'.$mediaFilename );
+            return route('getFile',$mediaFilename);
+        } )
+        ->setPlaylistUrlResolver( function ( $playlistFilename ) use($video) {
+            return route( 'video.playlist', ['playlist' => $playlistFilename, 'video' => $video] );
+        } );
+    }
+    public function getPlaylistKey( $key ) {
+        $path = str_replace('-','/',$key);
+        return \Storage::disk( 'secrets' )->download( $path );
     }
 }

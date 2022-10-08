@@ -20,7 +20,7 @@
         <script>
             var player = videojs('my-video',{});
             player.src({
-                src: "{{ route('getFile',$video) }}",
+                src: "{{ route('video.playlist',$video) }}",
                 type: 'application/x-mpegURL'
             });
         </script>

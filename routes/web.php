@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\VideoController;
+use App\Models\Video;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,6 +29,10 @@ Route::post('/videos/store', [VideoController::class,'store'])->middleware(['aut
 
 Route::get('/videos/{video}', [VideoController::class,'view'])->middleware(['auth'])->name('videos.show');
 Route::get('/videos/{video}/process', [VideoController::class,'processVideo'])->middleware(['auth'])->name('videos.process');
+
+Route::get( '/video/secret/{key}', [VideoController::class, 'getPlaylistKey'] )->name( 'video.key' );
+
+Route::get( '/video/{video}/{playlist?}', [VideoController::class, 'getPlaylist'])->name( 'video.playlist' );
 
 Route::get('/files/{file}', [VideoController::class,'getFile'])->middleware(['auth'])->name('getFile');
 
