@@ -4,10 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Jobs\ConvertVideoForStreaming;
 use App\Models\Video;
-use Artisan;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\File;
-use Symfony\Component\Console\Output\BufferedOutput;
 
 class VideoController extends Controller {
     public function index()
@@ -20,7 +18,7 @@ class VideoController extends Controller {
         $request->validate( [
             'title'       => 'required',
             'description' => 'required',
-            'video'       => ['required',File::types( ['mp4', 'webm','mov','mkv'] )->max( 2048 * 1024 )],
+            'video'       => ['required',File::types( ['mp4', 'webm','mov','mkv'] )->max( 5120 * 1024 )],
         ] );
         $videoFile           = $request->file( 'video' );
         $name            = time() . '.' . $videoFile->getClientOriginalExtension();

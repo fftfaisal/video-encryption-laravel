@@ -53,8 +53,8 @@ class ConvertVideoForStreaming implements ShouldQueue
             'convert_start_for_streaming_at' => now(),
         ]);
         // create some video formats...
-        // $lowBitrateFormat  = (new X264)->setKiloBitrate(500);
-        // $midBitrateFormat  = (new X264)->setKiloBitrate(1500);
+        $lowBitrateFormat  = (new X264)->setKiloBitrate(500);
+        $midBitrateFormat  = (new X264)->setKiloBitrate(1500);
         $highBitrateFormat = (new X264)->setKiloBitrate(4000);
         $encryptionKey = HLSExporter::generateEncryptionKey();
         \Storage::put( 'encrypted/'.$this->video->id.'/' .$this->video->uuid.'.key', $encryptionKey );
@@ -76,8 +76,8 @@ class ConvertVideoForStreaming implements ShouldQueue
 
         // we'll add different formats so the stream will play smoothly
         // with all kinds of internet connections...
-            // ->addFormat($lowBitrateFormat)
-            // ->addFormat($midBitrateFormat)
+            ->addFormat($lowBitrateFormat)
+            ->addFormat($midBitrateFormat)
             // ->setSegmentLength(10)
             // ->setKeyFrameInterval(100)
             ->addFormat($highBitrateFormat)
