@@ -13,6 +13,8 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use ProtoneMedia\LaravelFFMpeg\Exporters\HLSExporter;
+use FFMpeg\Format\ProgressListener\AbstractProgressListener;
+use ProtoneMedia\LaravelFFMpeg\FFMpeg\ProgressListenerDecorator;
 
 class ConvertVideoForDownloading implements ShouldQueue
 {
@@ -49,6 +51,7 @@ class ConvertVideoForDownloading implements ShouldQueue
         $midBitrate   = ( new X264 )->setKiloBitrate( 500 );
         $highBitrate  = ( new X264 )->setKiloBitrate( 1000 );
         $superBitrate = ( new X264 )->setKiloBitrate( 1500 );
+
         \FFMpeg::fromDisk($this->video->disk)
         ->open($this->video->path)
         ->exportForHLS()
@@ -69,9 +72,8 @@ class ConvertVideoForDownloading implements ShouldQueue
         ->addFormat( $midBitrate )
         ->addFormat( $highBitrate )
         ->addFormat( $superBitrate )
-        ->onProgress(function ($percentage) {
+        ->onProgress(function($percentage) {
             Log::channel('faisal')->info( 'progressed: ' . $percentage . '%' );
-            // echo "progress: {$percentage}% done <br>";
             $this->video->update( [
                 'processing_percentage' => $percentage,
             ] );
