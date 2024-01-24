@@ -16,6 +16,11 @@
                             style="width: {{ $video->processing_percentage }}%"> {{ $video->processing_percentage }}%
                         </div>
                     </div>
+                    <div class="text-center mt-8">
+                        <a href="{{ route('videos.show', $video) }}" class="inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white bg-indigo-500 hover:bg-indigo-400 transition ease-in-out duration-150">
+                            Play Video
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

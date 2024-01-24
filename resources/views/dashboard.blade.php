@@ -83,7 +83,7 @@
                             if (evt.lengthComputable) {
                                 var percentComplete = evt.loaded / evt.total;
                                 percentComplete = parseInt(percentComplete * 100);
-                                console.log(percentComplete);
+
                                 $('.submit-text').text('Uploading ' + percentComplete + '%');
 
                                 if (percentComplete === 100) {
@@ -110,14 +110,13 @@
                                 $('#submit').attr('disabled', false);
                                 $('.success-text').text(data.success).addClass('text-green-500');
                             }
-                            console.log(data);
+                            window.location.href = route('videos.process', data.video_id);
                         },
                         error: function (error) {
                             $('#loader').addClass('hidden');
                             $('#submit').find('.submit-text').text('Submit');
                             $('#submit').attr('disabled', false);
                             $('.error-text').text(error.responseJSON.message);
-                            console.log(error);
                         }
                     });
                 });

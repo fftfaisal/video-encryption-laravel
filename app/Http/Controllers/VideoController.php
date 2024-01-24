@@ -32,7 +32,7 @@ class VideoController extends Controller {
             'title'         => $request->title,
             'description'   => $request->description,
         ]);
-        $this->dispatch( new ConvertVideoForStreaming( $video ) );
+        ConvertVideoForStreaming::dispatch($video);
         return response()->json( ['success' => 'Video Uploaded successfully', 'video_id' => $video->id] );
     }
 

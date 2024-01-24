@@ -33,6 +33,7 @@
         <script src="//code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://vjs.zencdn.net/7.20.1/video.min.js"></script>
         {{-- <script src="https://unpkg.com/@videojs/http-streaming@2.14.2/dist/videojs-http-streaming.min.js"></script> --}}
+        @routes
         @yield('scripts')
     </body>
 </html>
